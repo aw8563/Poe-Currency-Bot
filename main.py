@@ -40,6 +40,8 @@ VENDOR_Y = 500
 
 SHOP_BUTTON_X = 630
 SHOP_BUTTON_Y = 260
+SHOP_CELL_X = 95
+SHOP_CELL_Y = 220
 
 GAME_X = 1278//2
 GAME_Y = 15
@@ -186,7 +188,19 @@ def sellToVendor():
             y = INVENTORY_Y + i*CELL_SIZE
 
             click(x, y, True)
-    sell()
+
+            if isChaos():
+                sell()
+                return True
+
+    return False
+
+# assumes we are in sell screen
+# returns true if chaos recipe is done, false otherwise
+# checks if the top left cell in vendor is a chaos orb
+def isChaos():
+    pyautogui.moveTo(SHOP_CELL_X, SHOP_CELL_Y)
+    return read()
 
 # sells our items
 def sell():
