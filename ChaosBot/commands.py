@@ -31,3 +31,7 @@ def readItem(x, y):
     win32clipboard.OpenClipboard()
     return win32clipboard.GetClipboardData() \
         if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_TEXT) else ""
+
+# if we move mouse to the top of window, we are exiting
+def checkExit():
+    return pyautogui.position()[1] <= 30

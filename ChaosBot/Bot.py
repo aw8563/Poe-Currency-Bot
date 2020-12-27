@@ -9,6 +9,8 @@ class Bot:
     def __init__(self, test=False, debug=False):
         self.debug = debug
         self.test = test
+        self.running = True
+
         self.commands = [
             self.moveToStashAndOpen,
             self.getFromStash,
@@ -37,7 +39,7 @@ class Bot:
 
         # give it some time to move
         time.sleep(2)
-        return True
+        return not checkExit()
 
     # assumes we are in default position next to our stash
     def moveToShopAndOpen(self):
@@ -50,7 +52,7 @@ class Bot:
         # open shop
         click(SHOP_BUTTON_X, SHOP_BUTTON_Y)
 
-        return True
+        return not checkExit()
 
     # assumes we are in the stash screen
     def getFromStash(self):
@@ -95,6 +97,9 @@ class Bot:
         # iterate through the tab
         for j in range(STASH_COLS):
             for i in range(STASH_ROWS):
+                if checkExit():
+                    return False
+
                 x = STASH_CELL_X + j * CELL_SIZE
                 y = STASH_CELL_Y + i * CELL_SIZE
 
@@ -133,6 +138,9 @@ class Bot:
         # iterate through each cell in shop
         for j in range(INVENTORY_COLS):
             for i in range(INVENTORY_ROWS):
+                if checkExit():
+                    return False
+
                 x = INVENTORY_X + j*CELL_SIZE
                 y = INVENTORY_Y + i*CELL_SIZE
 
