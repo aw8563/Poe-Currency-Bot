@@ -15,12 +15,10 @@ def click(x, y, ctrl=False, double=False):
     if double:
         pyautogui.click()
 
-
     if ctrl:
         pyautogui.keyUp('ctrl')
 
 def readItem(x, y):
-
     # clear previous copied value
     win32clipboard.OpenClipboard()
     win32clipboard.EmptyClipboard()
@@ -33,4 +31,3 @@ def readItem(x, y):
     win32clipboard.OpenClipboard()
     return win32clipboard.GetClipboardData() \
         if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_TEXT) else ""
-

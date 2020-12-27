@@ -11,8 +11,8 @@ SELL_BUTTON_X = 125
 SELL_BUTTON_Y = 750
 
 # stash location
-STASH_X = 765
-STASH_Y = 340
+STASH_X = 1020
+STASH_Y = 460
 
 # top left box in stash
 STASH_CELL_X = 15 + CELL_SIZE//2
@@ -43,8 +43,8 @@ HELMET_TAB_X = 345
 ARMOUR_AND_WEAPON_TAB_X = 400
 
 # location of the vendor
-VENDOR_X = 465
-VENDOR_Y = 500
+VENDOR_X = 220
+VENDOR_Y = 370
 
 # "sell item" button on vendor
 SHOP_BUTTON_X = 630

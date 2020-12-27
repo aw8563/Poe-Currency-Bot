@@ -22,18 +22,21 @@ def isAmulet(text):
 def isBelt(text):
     return "Belt" in text or "Sash" in text
 
+# since gloves/boots/helmets are in their own separate tab, we can probably just return true always
+
 def isGlove(text):
-    return "Gloves" in text
+    return "Gauntlets" in text or "Gloves" in text or "Mitts" in text
 
 def isBoot(text):
-    return "Boot" in text
+    return "Greaves" in text or "Boots" in text or "Shoes" in text or "Slippers"
 
 def isHelmet(text):
-    return "Helmet" in text or "Mask" in text
+    return "" in text
 
 def isBodyArmour(text):
-    return "Armour" in text
+    return "Armour:" in text or "Evasion Rating:" in text or "Energy Shield:" in text
 
-# for now only 'large' weapons
 def isWeapon(text):
-    return "Sword" in text or "Axe" in text
+    return "Physical Damage:" in text and \
+           "Critical Strike Chance:" in text and \
+           "Attacks per Second:" in text
