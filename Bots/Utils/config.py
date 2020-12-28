@@ -57,3 +57,19 @@ SHOP_CELL_Y = 220
 # top game bar
 GAME_X = 1278//2
 GAME_Y = 15
+
+# location of alteration in currency tab
+ALTERATION_X = 100
+ALTERATION_Y = 290
+
+# location of chaos in currency tab
+CHAOS_X = 480
+CHAOS_Y = 290
+
+# offset of currency shift click accept button relative to the currency box
+BUTTON_OFFSET_X = 90
+BUTTON_OFFSET_Y = -40
+
+# bottom right box in ivnneotry
+INVENTORY_LAST_X = 1240
+INVENTORY_LAST_Y = 750
