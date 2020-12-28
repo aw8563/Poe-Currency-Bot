@@ -24,6 +24,7 @@ def vendorCells():
             y = SHOP_CELL_Y + i * CELL_SIZE
 
             yield x, y
+
 def inventoryCells():
     for j in range(INVENTORY_COLS):
         for i in range(INVENTORY_ROWS):

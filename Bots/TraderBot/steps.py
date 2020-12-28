@@ -75,25 +75,24 @@ class Trade:
 
     # do the trade
     def performTrade(self):
+        # TODO: check when trade req is accepted
         time.sleep(5)
+
         # start from the leftover bit
         click(INVENTORY_LAST_X, INVENTORY_LAST_Y, ctrl=True)
 
-        n = 0
+        # TODO: stop when we've put everything in
         for x, y in inventoryCells():
             click(x, y, ctrl=True)
 
-            n += 1
 
-            if n > 10:
-                break
-
-        # check what they are giving me is actually legit
+        # TODO: check what they are giving me is actually legit
         for x, y in vendorCells():
             pyautogui.moveTo(x, y)
 
         return False
 
+    # TODO: handle currency
     # assume alts for now
     def getFromStash(self):
         text = readItem(ALTERATION_X, ALTERATION_Y)
