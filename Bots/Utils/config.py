@@ -73,3 +73,6 @@ BUTTON_OFFSET_Y = -40
 # bottom right box in ivnneotry
 INVENTORY_LAST_X = 1240
 INVENTORY_LAST_Y = 750
+
+# wait 15 seconds for pty invite/trade
+WAIT_TIME = 15
