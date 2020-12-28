@@ -1,4 +1,4 @@
-# Poe-Chaos-Bot
+# Poe-Currency-Bot
 
 - we printing chaos orbs!
 
