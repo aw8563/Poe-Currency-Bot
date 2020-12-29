@@ -31,6 +31,7 @@ def isBoot(text):
     return "Greaves" in text or "Boots" in text or "Shoes" in text or "Slippers"
 
 def isHelmet(text):
+    # there's too many names so I ceebs
     return "" in text
 
 def isBodyArmour(text):

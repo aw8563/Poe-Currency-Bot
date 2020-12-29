@@ -10,7 +10,6 @@ CELL_SIZE = 45
 ACCEPT_BUTTON_X = 125
 ACCEPT_BUTTON_Y = 750
 
-# TODO
 # cancel button on vendor
 CANCEL_BUTTON_X = 575
 CANCEL_BUTTON_Y = 750
@@ -64,20 +63,24 @@ GAME_X = 1278//2
 GAME_Y = 15
 
 # location of alteration in currency tab
-ALTERATION_X = 100
-ALTERATION_Y = 290 + 100
+ALCHEMY_X = 430
+ALCHEMY_Y = 295
 
 # location of chaos in currency tab
 CHAOS_X = 480
 CHAOS_Y = 290
 
 # offset of currency shift click accept button relative to the currency box
-BUTTON_OFFSET_X = 90
-BUTTON_OFFSET_Y = -40
+AMOUNT_BUTTON_OFFSET_X = 90
+AMOUNT_BUTTON_OFFSET_Y = -40
 
-# bottom right box in ivnneotry
-INVENTORY_LAST_X = 1240
-INVENTORY_LAST_Y = 750
+# offset of box where you enter how much you want to sell for relative to currency box
+PRICE_INPUT_OFFSET_X = -30
+PRICE_INPUT_OFFSET_Y = 65
+
+# offset of currency price accept button relative to currency box
+PRICE_ACCEPT_OFFSET_X = 190
+PRICE_ACCEPT_OFFSET_Y = 105
 
 # wait 15 seconds for pty invite/trade
 WAIT_TIME = 10

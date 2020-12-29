@@ -2,11 +2,15 @@ import os
 
 from Bots.Utils import *
 from Bots.TraderBot.Currency import Currency
+from Bots.TraderBot.PriceManager import priceManager
 
 processed = set()
 
 def test():
-    pass
+    trade = Trade(pollMsg())
+
+    # print(trade.validatePrices())
+    updateCurrencyPrices()
 
 class Trade:
     def __init__(self, msg):
@@ -52,10 +56,12 @@ class Trade:
 
         return True
 
-    # TODO: checks prices against poeninja to make sure we are not getting scammed
-    # TODO: also check we have enough
     def validatePrices(self):
-        return True
+        x, y = mapCurrencyToStash(self.buyCurrency)
+        currencyInStash = Currency(readItem(x, y))
+
+        return currencyInStash.total >= self.buyAmount and \
+               priceManager.validate(self.buyCurrency, self.buyAmount, self.sellAmount)
 
     # invite to party and wait until he joins hideout
     def inviteParty(self):
@@ -130,25 +136,44 @@ class Trade:
         return False
 
     # TODO: handle currency
-    # assume alts for now
+    # assume alcs for now
     def getFromStash(self):
-        x = ALTERATION_X
-        y = ALTERATION_Y
+        x = ALCHEMY_X
+        y = ALCHEMY_Y
         currency = Currency(readItem(x, y))
 
         # get the "leftover" bits
         click(x, y, secondary='shift')
         type(str(self.buyAmount%currency.stack))
-        click(x + BUTTON_OFFSET_X, y + BUTTON_OFFSET_Y)
+        click(x + AMOUNT_BUTTON_OFFSET_X, y + AMOUNT_BUTTON_OFFSET_Y)
         click(INVENTORY_X, INVENTORY_Y)
 
         # for i in range(self.buyAmount//currency.stack):
         click(x, y, secondary='ctrl', amount=self.buyAmount//currency.stack)
 
+def updateCurrencyPrices():
 
-def updatePrice():
-    # TODO: set prices to poe.ninja prices
-    return True
+    for name, sell, buy in priceManager.getCurrencies():
+        x, y = mapCurrencyToStash(name)
+        updatePrice(x, y, sell, buy)
+
+# TODO: add more
+def mapCurrencyToStash(name):
+    return ALCHEMY_X, ALCHEMY_Y
+
+# tab must be set to public and the chosen opposite buy currency pre selected
+def updatePrice(x, y, sell, buy):
+    # bring up the sell price ui
+    click(x, y, button="secondary")
+
+
+    # delete old sell price
+    click(x + PRICE_INPUT_OFFSET_X, y + PRICE_INPUT_OFFSET_Y, amount=2)
+    backspace()
+
+    # set new sell price
+    type("%d/%d" % (buy, sell))
+    click(x + PRICE_ACCEPT_OFFSET_X, y + PRICE_ACCEPT_OFFSET_Y)
 
 def emptyInventory():
     print("emptying...")
@@ -164,6 +189,7 @@ def waitForTrade():
         msg = pollMsg()
 
         if not isTradeMsg(msg):
+            updatePrice() # update poe ninja prices
             continue
 
         trade = Trade(msg)
@@ -175,8 +201,6 @@ def waitForTrade():
         time.sleep(1)
         if not trade.attemptToTrade():
             continue
-
-        processed.remove(trade.msg)
 
         return True
 

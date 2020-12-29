@@ -6,14 +6,14 @@ def closeWindow():
     pyautogui.press('esc')
 
 # moves mouse to area and clicks
-def click(x, y, secondary=None, amount=1):
+def click(x, y, button="primary", secondary=None, amount=1):
 
     if secondary:
         pyautogui.keyDown(secondary)
 
     pyautogui.moveTo(x, y)
     for i in range(amount):
-        pyautogui.click()
+        pyautogui.click(button=button)
 
     if secondary:
         pyautogui.keyUp(secondary)
@@ -39,3 +39,6 @@ def checkExit():
 
 def type(msg):
     pyautogui.typewrite(msg)
+
+def backspace(amount=1):
+    pyautogui.press('backspace', presses=amount)
