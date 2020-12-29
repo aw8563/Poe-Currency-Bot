@@ -47,11 +47,12 @@ def getFromStash():
 
     # exit stash
     closeWindow()
+
     return True
 
 # switches to tab(x,y)
 # item must satisfies accept(item text)
-# grabs items up to count inclusive
+# grabs items up to count
 def getItemFromStashTab(requirements):
     # move to correct tab
     click(requirements.tabX, requirements.tabY)
@@ -61,49 +62,49 @@ def getItemFromStashTab(requirements):
 
     # iterate through the tab
     for x, y in stashCells():
-            if checkExit():
-                return False
+        if checkExit():
+            return False
 
-            # get the item there
-            text = readItem(x, y)
+        # get the item there
+        text = readItem(x, y)
 
-            # same item as before (item takes multiple cells)
-            if text == prev:
-                continue
+        # same item as before (item takes multiple cells)
+        if text == prev:
+            continue
 
-            prev = text
+        prev = text
 
-            # the correct item type we are looking for
-            if requirements.accept(text):
-                count += 1
+        # the correct item type we are looking for
+        if requirements.accept(text):
+            count += 1
 
-                # CLICK TWICE JUST IN CASE
-                click(x, y, secondary='ctrl', amount=2)
+            # CLICK TWICE JUST IN CASE
+            click(x, y, secondary='ctrl', amount=2)
 
-            if count == requirements.count:
-                return True
+        if count == requirements.count:
+            return True
 
     return False
 
 
 # assumes we are in the sell screen
 def sellToVendor():
+    # iterate through each cell in inventory
     for x, y in inventoryCells():
-            # iterate through each cell in shop
-            if checkExit():
-                return False
+        if checkExit():
+            return False
 
-            # skip non unid rares
-            if not isChaosRecipeItem(x, y):
-                continue
+        # skip items that are not unid rares
+        if not isChaosRecipeItem(x, y):
+            continue
 
-            click(x, y, secondary='ctrl')
+        click(x, y, secondary='ctrl')
 
-            # recipe is complete
-            if isRecipeFinished():
-                acceptTrade()
-                closeWindow()
-                return True
+        # recipe is complete
+        if isRecipeFinished():
+            acceptTrade()
+            closeWindow()
+            return True
 
     return False
 
