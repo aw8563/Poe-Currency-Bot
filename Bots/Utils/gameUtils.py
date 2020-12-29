@@ -9,8 +9,12 @@ def invite(name):
 def trade(name):
     type("\n/tradewith %s\n" % name)
 
-def sell():
-    click(SELL_BUTTON_X, SELL_BUTTON_Y)
+def acceptTrade():
+    click(ACCEPT_BUTTON_X, ACCEPT_BUTTON_Y, secondary='space')
+    time.sleep(0.5)
+
+def cancelTrade():
+    click(CANCEL_BUTTON_X, CANCEL_BUTTON_Y, secondary='space')
     time.sleep(0.5)
 
 def focusGame():

@@ -7,8 +7,13 @@
 CELL_SIZE = 45
 
 # sell button on vendor
-SELL_BUTTON_X = 125
-SELL_BUTTON_Y = 750
+ACCEPT_BUTTON_X = 125
+ACCEPT_BUTTON_Y = 750
+
+# TODO
+# cancel button on vendor
+CANCEL_BUTTON_X = 575
+CANCEL_BUTTON_Y = 750
 
 # stash location
 STASH_X = 1020
@@ -60,7 +65,7 @@ GAME_Y = 15
 
 # location of alteration in currency tab
 ALTERATION_X = 100
-ALTERATION_Y = 290
+ALTERATION_Y = 290 + 100
 
 # location of chaos in currency tab
 CHAOS_X = 480
@@ -75,4 +80,4 @@ INVENTORY_LAST_X = 1240
 INVENTORY_LAST_Y = 750
 
 # wait 15 seconds for pty invite/trade
-WAIT_TIME = 15
+WAIT_TIME = 10

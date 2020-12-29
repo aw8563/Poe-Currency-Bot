@@ -4,6 +4,10 @@ from Bots.Utils import *
 from Bots.TraderBot.Currency import Currency
 
 processed = set()
+
+def test():
+    pass
+
 class Trade:
     def __init__(self, msg):
         self.msg = msg[msg.find('@'):]
@@ -29,19 +33,27 @@ class Trade:
             return False
 
         if not self.inviteParty():
+            emptyInventory()
             return False
 
         if not self.requestTrade():
+            emptyInventory()
             return False
 
         if not self.performTrade():
+            cancelTrade()
             return False
 
-        # trade done
+        # wait for them to hover
+        time.sleep(3)
+
+        acceptTrade() # accept the trade
+        cancelTrade() # in case they don't accept, we want to cancel trade
+
         return True
 
-    # checks prices against poeninja to make sure we are not getting scammed
-    # also check we have enough
+    # TODO: checks prices against poeninja to make sure we are not getting scammed
+    # TODO: also check we have enough
     def validatePrices(self):
         return True
 
@@ -55,14 +67,13 @@ class Trade:
 
         start = time.time()
         while True:
-            if "%s has joined the area" % (self.name) in pollMsg():
+            if "%s has joined the area" % (self.name) in pollMsg(10):
                 return True
 
             # if the person takes too long
             if time.time() - start > WAIT_TIME:
                 break
 
-        emptyInventory()
         return False
 
     # initiate trade request and wait for him to accept
@@ -82,79 +93,58 @@ class Trade:
             if time.time() - start > WAIT_TIME:
                 break
 
-        emptyInventory()
         return False
 
     # do the trade
     def performTrade(self):
-        # start from the leftover bit
-        click(INVENTORY_LAST_X, INVENTORY_LAST_Y, ctrl=True)
-
         for x, y in inventoryCells():
-            click(x, y, ctrl=True)
-
             # stop if we have put everything in already
             if readItem(x,y) == "":
                 break
 
+            click(x, y, secondary='ctrl')
+
         total = 0
         for x, y in vendorCells():
             text = readItem(x,y)
-            if text == "":
-                continue
 
             currency = Currency(text)
             if currency.type == self.sellCurrency:
                 total += currency.total
 
-            if total == self.sellAmount:
+            if total >= self.sellAmount:
                 return True
 
         # do it again just in case they are slow as fuck
         total = 0
         for x, y in vendorCells():
             text = readItem(x,y)
-            if text == "":
-                continue
 
             currency = Currency(text)
-
-            # TODO: handle this
-            if currency.type == self.sellCurrency or currency.type == "":
+            if currency.type == self.sellCurrency:
                 total += currency.total
 
-        return total == self.sellAmount
+            if total >= self.sellAmount:
+                return True
+
+        return False
 
     # TODO: handle currency
     # assume alts for now
     def getFromStash(self):
         x = ALTERATION_X
         y = ALTERATION_Y
-
-        # s = text[text.find("Stack Size: ") + 12:]
-        # stack = int(s[:s.find('\r')].split("/")[-1])
         currency = Currency(readItem(x, y))
 
-        total = 0
-        for i in range(self.buyAmount//currency.stack):
-            click(x, y, ctrl=True)
-            total += currency.stack
+        # get the "leftover" bits
+        click(x, y, secondary='shift')
+        type(str(self.buyAmount%currency.stack))
+        click(x + BUTTON_OFFSET_X, y + BUTTON_OFFSET_Y)
+        click(INVENTORY_X, INVENTORY_Y)
 
-        if total < self.buyAmount:
-            click(x, y, shift=True)
-            type(str(self.buyAmount - total))
-            click(x + BUTTON_OFFSET_X, y + BUTTON_OFFSET_Y)
+        # for i in range(self.buyAmount//currency.stack):
+        click(x, y, secondary='ctrl', amount=self.buyAmount//currency.stack)
 
-            # put into top left if it's single
-            # this is to ensure we always have a stack of currency top left corner
-            click(INVENTORY_X, INVENTORY_Y) if total == 0 else \
-                click(INVENTORY_LAST_X, INVENTORY_LAST_Y)
-
-    def parseCurrency(self, text):
-        text = text[text.find("Stack Size: ") + 12:]
-        total, stack = text[:text.find('\r')].split("/")
-
-        return int(total), int(stack)
 
 def updatePrice():
     # TODO: set prices to poe.ninja prices
@@ -164,7 +154,7 @@ def emptyInventory():
     print("emptying...")
 
     for x, y in inventoryCells():
-        click(x, y, ctrl=True)
+        click(x, y, secondary='ctrl')
         break
 
     return True
@@ -190,10 +180,11 @@ def waitForTrade():
 
         return True
 
-def pollMsg():
+def pollMsg(amount=1):
     with open('E:\Path of Exile\logs\Client.txt', 'rb') as file:
-        file.seek(-300, os.SEEK_END)
-        return file.readlines()[-1].decode("utf-8")
+        file.seek(-300*amount, os.SEEK_END)
+        return file.readlines()[-1].decode("utf-8") if amount == 1 else \
+            [line.decode("utf-8") for line in file.readlines()[-1*amount:]]
 
 def isTradeMsg(msg):
     return "Hi, I'd like to buy your" in msg and "@From" in msg

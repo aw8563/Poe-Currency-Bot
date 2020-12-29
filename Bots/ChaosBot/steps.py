@@ -4,7 +4,7 @@ from Bots.ChaosBot.ItemFilter import *
 # initial position is at vendor
 def moveToStashAndOpen():
     # move and open
-    click(STASH_X, STASH_Y, True, double=True)
+    click(STASH_X, STASH_Y, amount=2)
 
     # give it some time to move
     time.sleep(2)
@@ -78,7 +78,7 @@ def getItemFromStashTab(requirements):
                 count += 1
 
                 # CLICK TWICE JUST IN CASE
-                click(x, y, ctrl=True, double=True)
+                click(x, y, secondary='ctrl', amount=2)
 
             if count == requirements.count:
                 return True
@@ -97,11 +97,11 @@ def sellToVendor():
             if not isChaosRecipeItem(x, y):
                 continue
 
-            click(x, y, ctrl=True, double=True)
+            click(x, y, secondary='ctrl')
 
             # recipe is complete
             if isRecipeFinished():
-                sell()
+                acceptTrade()
                 closeWindow()
                 return True
 

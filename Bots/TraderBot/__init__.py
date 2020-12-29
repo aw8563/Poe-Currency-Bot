@@ -1,5 +1,5 @@
 from Bots.Bot import Bot
-from Bots.TraderBot.steps import updatePrice, waitForTrade, emptyInventory
+from Bots.TraderBot.steps import updatePrice, waitForTrade, emptyInventory, test
 
 steps = [
     updatePrice,

@@ -6,23 +6,18 @@ def closeWindow():
     pyautogui.press('esc')
 
 # moves mouse to area and clicks
-def click(x, y, ctrl=False, shift=False, double=False):
-    if ctrl:
-        pyautogui.keyDown('ctrl')
-    if shift:
-        pyautogui.keyDown('shift')
+def click(x, y, secondary=None, amount=1):
+
+    if secondary:
+        pyautogui.keyDown(secondary)
 
     pyautogui.moveTo(x, y)
-    pyautogui.click()
-
-    if double:
+    for i in range(amount):
         pyautogui.click()
 
-    if ctrl:
-        pyautogui.keyUp('ctrl')
+    if secondary:
+        pyautogui.keyUp(secondary)
 
-    if shift:
-        pyautogui.keyUp('shift')
 
 def readItem(x, y):
     # clear previous copied value
