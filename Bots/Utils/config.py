@@ -62,9 +62,13 @@ SHOP_CELL_Y = 220
 GAME_X = 1278//2
 GAME_Y = 15
 
-# location of alteration in currency tab
-ALCHEMY_X = 430
-ALCHEMY_Y = 295
+# % off best ask/bid to price our currency at
+PRICE_DELTA = 0.05
+
+# name and location of trading currency tab
+CURRENCY_NAME = "Orb of Alchemy"
+CURRENCY_X = 430
+CURRENCY_Y = 295
 
 # location of chaos in currency tab
 CHAOS_X = 480

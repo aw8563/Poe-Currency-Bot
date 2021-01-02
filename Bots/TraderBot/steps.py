@@ -9,9 +9,6 @@ processed = set()
 def test():
     trade = Trade(pollMsg())
 
-    # print(trade.validatePrices())
-    updateCurrencyPrices()
-
 class Trade:
     def __init__(self, msg):
         self.msg = msg[msg.find('@'):]
@@ -28,6 +25,9 @@ class Trade:
         s = s[s.find(" ") + 1:]
         self.sellCurrency = s[:s.find(" in ")]
 
+        # true if we are trading our currency for chaos
+        # false if we are trading our chaos for currency
+        self.side = CURRENCY_NAME == self.buyCurrency
 
     def attemptToTrade(self):
         print("%s: buying %s (%d) for %s (%d)" %
@@ -57,11 +57,11 @@ class Trade:
         return True
 
     def validatePrices(self):
-        x, y = mapCurrencyToStash(self.buyCurrency)
+        x, y = (CURRENCY_X, CURRENCY_Y) if self.side else (CHAOS_X, CHAOS_Y)
         currencyInStash = Currency(readItem(x, y))
 
         return currencyInStash.total >= self.buyAmount and \
-               priceManager.validate(self.buyCurrency, self.buyAmount, self.sellAmount)
+               priceManager.validate(self.side, self.buyAmount, self.sellAmount)
 
     # invite to party and wait until he joins hideout
     def inviteParty(self):
@@ -138,8 +138,7 @@ class Trade:
     # TODO: handle currency
     # assume alcs for now
     def getFromStash(self):
-        x = ALCHEMY_X
-        y = ALCHEMY_Y
+        x, y = (CURRENCY_X, CURRENCY_Y) if self.side else (CHAOS_X, CHAOS_Y)
         currency = Currency(readItem(x, y))
 
         # get the "leftover" bits
@@ -148,24 +147,21 @@ class Trade:
         click(x + AMOUNT_BUTTON_OFFSET_X, y + AMOUNT_BUTTON_OFFSET_Y)
         click(INVENTORY_X, INVENTORY_Y)
 
-        # for i in range(self.buyAmount//currency.stack):
         click(x, y, secondary='ctrl', amount=self.buyAmount//currency.stack)
 
 def updateCurrencyPrices():
+    sell, buy = priceManager.getCurrencyToChaosRatio()
+    updatePrice(CURRENCY_X, CURRENCY_Y, sell, buy)
 
-    for name, sell, buy in priceManager.getCurrencies():
-        x, y = mapCurrencyToStash(name)
-        updatePrice(x, y, sell, buy)
+    sell, buy = priceManager.getChaosToCurrencyRatio()
+    updatePrice(CHAOS_X, CHAOS_Y, sell, buy)
 
-# TODO: add more
-def mapCurrencyToStash(name):
-    return ALCHEMY_X, ALCHEMY_Y
+    return True
 
 # tab must be set to public and the chosen opposite buy currency pre selected
 def updatePrice(x, y, sell, buy):
     # bring up the sell price ui
     click(x, y, button="secondary")
-
 
     # delete old sell price
     click(x + PRICE_INPUT_OFFSET_X, y + PRICE_INPUT_OFFSET_Y, amount=2)
@@ -185,11 +181,11 @@ def emptyInventory():
     return True
 
 def waitForTrade():
+    print("waiting for trade")
     while True:
         msg = pollMsg()
 
         if not isTradeMsg(msg):
-            updatePrice() # update poe ninja prices
             continue
 
         trade = Trade(msg)
