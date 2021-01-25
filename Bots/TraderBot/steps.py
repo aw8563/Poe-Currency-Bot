@@ -1,6 +1,6 @@
 import os
 
-from Bots.Utils import *
+from Utils import *
 from Bots.TraderBot.Currency import Currency
 from Bots.TraderBot.PriceManager import priceManager
 

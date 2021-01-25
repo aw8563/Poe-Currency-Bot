@@ -2,14 +2,12 @@ import subprocess
 import json
 
 from Models.Item import Item
-from Bots.Utils.cookies import SESS_ID
-
-CHARACTER = "kwoktopus"
-LEAGUE = "Ritual"
+from Utils.cookies import SESS_ID
+from Utils.config import CHARACTER_NAME, LEAGUE_NAME
 
 def queryItemsFromStash(tab):
     url = "https://www.pathofexile.com/character-window/get-stash-items?accountName=%s&realm=pc&league=%s&tabs=0&tabIndex=%d" \
-          % (CHARACTER, LEAGUE, tab)
+          % (CHARACTER_NAME, LEAGUE_NAME, tab)
 
     commands = [
         'curl',

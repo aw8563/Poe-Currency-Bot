@@ -38,7 +38,9 @@ INVENTORY_COLS = 12
 FOLDER_X = 280
 FOLDER_Y = 135
 
-# location of each tab
+# location of each tab.
+# Now that we are using api to retrieve items, it doesn't matter which items goes into which tab.
+# Any item can go into any random tab
 TAB_Y = 165
 JEWELRY_TAB_X = 185
 GLOVE_TAB_X = 240
@@ -53,6 +55,7 @@ BOOT_TAB_IDX = 9
 HELMET_TAB_IDX = 10
 ARMOUR_AND_WEAPON_TAB_IDX = 11
 
+# maps tab id to x location of tab button
 CHAOS_STASHES = {
     JEWELRY_TAB_IDX: JEWELRY_TAB_X,
     GLOVE_TAB_IDX: GLOVE_TAB_X,
@@ -61,6 +64,7 @@ CHAOS_STASHES = {
     ARMOUR_AND_WEAPON_TAB_IDX: ARMOUR_AND_WEAPON_TAB_X
 }
 
+# items are retrieved from stash in a particular order so that these cells will always contain an item
 CHAOS_INVENTORY_CELLS = [
     (0, 0),
     (0, 2),
@@ -72,7 +76,6 @@ CHAOS_INVENTORY_CELLS = [
     (4, 2),
     (5, 0),
 ]
-
 
 # location of the vendor
 VENDOR_X = 220
@@ -116,3 +119,6 @@ PRICE_ACCEPT_OFFSET_Y = 105
 
 # wait 15 seconds for pty invite/trade
 WAIT_TIME = 10
+
+CHARACTER_NAME = "kwoktopus"
+LEAGUE_NAME = "Ritual"

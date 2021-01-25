@@ -1,6 +1,6 @@
 import requests
 from fractions import Fraction
-from Bots.Utils.config import PRICE_DELTA, CURRENCY_NAME
+from Utils.config import PRICE_DELTA, CURRENCY_NAME
 
 class PriceManager:
     def __init__(self):

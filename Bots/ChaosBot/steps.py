@@ -1,4 +1,4 @@
-from Bots.Utils import *
+from Utils import *
 from Bots.ChaosBot.ItemFilter import *
 from Models.Item import ItemType
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from Bots.Utils.gameUtils import focusGame
+from Utils.gameUtils import focusGame
 
 class Bot:
     def __init__(self, steps):

@@ -1,7 +1,7 @@
 import time
 
-from Bots.Utils.keyboardMouseUtils import *
-from Bots.Utils.config import *
+from Utils.keyboardMouseUtils import *
+from Utils.config import *
 
 def invite(name):
     type("\n/invite %s\n" % name)
