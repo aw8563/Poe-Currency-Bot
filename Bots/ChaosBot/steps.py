@@ -1,5 +1,36 @@
 from Bots.Utils import *
 from Bots.ChaosBot.ItemFilter import *
+from Models.Item import ItemType
+
+items = {}
+for type in ItemType:
+    items[type] = set()
+
+chaosRecipeItemRequirements = [
+    ItemFilter(ItemType.GLOVE, 1),
+    ItemFilter(ItemType.BOOT, 1),
+    ItemFilter(ItemType.BELT, 1),
+    ItemFilter(ItemType.HELMET, 1),
+    ItemFilter(ItemType.ARMOUR, 1),
+    ItemFilter(ItemType.AMULET, 1),
+    ItemFilter(ItemType.RING, 2),
+    ItemFilter(ItemType.WEAPON, 1)
+]
+
+# gets all our items in stash
+for idx in CHAOS_STASHES:
+    for item in queryItemsFromStash(idx):
+        if not item.validForChaosRecipe():
+            continue
+
+        items[item.type].add(item)
+
+def test():
+    import random
+    random.shuffle(chaosRecipeItemRequirements)
+    res = checkRequirements(chaosRecipeItemRequirements)
+    for item in res:
+        print(item)
 
 # initial position is at vendor
 def moveToStashAndOpen():
@@ -8,6 +39,9 @@ def moveToStashAndOpen():
 
     # give it some time to move
     time.sleep(2)
+
+    # dump currency
+    click(INVENTORY_X, INVENTORY_Y, secondary='ctrl')
     return not checkExit()
 
 # assumes we are in default position next to our stash
@@ -29,82 +63,108 @@ def getFromStash():
     click(FOLDER_X, FOLDER_Y)
     time.sleep(0.5)
 
-    # get the stuff from each tab
-    itemsRequired = [
-        ItemFilter(JEWELRY_TAB_X, TAB_Y, isRing, 2),
-        ItemFilter(JEWELRY_TAB_X, TAB_Y, isAmulet, 1),
-        ItemFilter(JEWELRY_TAB_X, TAB_Y, isBelt, 1),
-        ItemFilter(GLOVE_TAB_X, TAB_Y, isGlove, 1),
-        ItemFilter(BOOT_TAB_X, TAB_Y, isBoot, 1),
-        ItemFilter(HELMET_TAB_X, TAB_Y, isHelmet, 1),
-        ItemFilter(ARMOUR_AND_WEAPON_TAB_X, TAB_Y, isBodyArmour, 1),
-        ItemFilter(ARMOUR_AND_WEAPON_TAB_X, TAB_Y, isWeapon, 1)
-    ]
+    if checkExit():
+        return False
 
-    for requirements in itemsRequired:
-        if not getItemFromStashTab(requirements):
-            return False
+    itemsRequired = checkRequirements(chaosRecipeItemRequirements)
+
+    # if we didn't find the required items
+    if not itemsRequired or len(itemsRequired) != 9:
+        return False
+
+    if not getItemsFromStashTab(itemsRequired):
+        return False
 
     # exit stash
     closeWindow()
 
-    return True
+    return not checkExit()
 
-# switches to tab(x,y)
-# item must satisfies accept(item text)
+def checkRequirements(requirements):
+    # this ordering ensures everything is always in the same spot
+
+    under75 = False
+    result = []
+
+    for requirement in requirements:
+        # if we don't have enough return false
+        if not hasItem(requirement):
+            return []
+
+        for _ in range(requirement.amount):
+             # make sure we have at least one under 75 so we can actually chaos recipe
+            target = None
+            if not under75:
+                for item in items[requirement.itemType]:
+                    if item.ilvl < 75:
+                        under75 = True
+                        target = item
+                        break
+            else: # if we do have under 75, then we want to prioritize items over i75 first.
+                for item in items[requirement.itemType]:
+                    if item.ilvl > 75 and (not result or item != result[-1]):
+                        target = item
+
+            if not target:
+                for item in items[requirement.itemType]:
+                    if not result or item != result[-1]:
+                        target = item
+                        break
+            result.append(target)
+    return result if under75 else []
+
+
+def hasItem(requirement):
+    return len(items[requirement.itemType]) >= requirement.amount
+
 # grabs items up to count
-def getItemFromStashTab(requirements):
-    # move to correct tab
-    click(requirements.tabX, requirements.tabY)
-
-    prev = ""
-    count = 0
-
-    # iterate through the tab
-    for x, y in stashCells():
+def getItemsFromStashTab(itemsRequired):
+    for item in itemsRequired:
         if checkExit():
             return False
 
-        # get the item there
-        text = readItem(x, y)
+        tabX = CHAOS_STASHES[item.stash]
+        tabY = TAB_Y
+        # move to correct tab
+        click(tabX, tabY)
 
-        # same item as before (item takes multiple cells)
-        if text == prev:
-            continue
+        # get x,y coordinate of item
+        x, y = stashCoordToXY(item.x, item.y)
 
-        prev = text
+        # grab item
+        time.sleep(0.15)
+        click(x, y, secondary='ctrl', amount=2)
+        time.sleep(0.15)
 
-        # the correct item type we are looking for
-        if requirements.accept(text):
-            count += 1
+        try:
+            items[item.type].remove(item)
+        except:
+            print("item doesn't exist somehow?")
+            return False
 
-            # CLICK TWICE JUST IN CASE
-            click(x, y, secondary='ctrl', amount=2)
-
-        if count == requirements.count:
-            return True
-
-    return False
-
+    return not checkExit()
 
 # assumes we are in the sell screen
 def sellToVendor():
     # iterate through each cell in inventory
-    for x, y in inventoryCells():
+    # hardcoded chaos recipe slots
+    for x, y in CHAOS_INVENTORY_CELLS:
         if checkExit():
             return False
 
+        x, y = inventoryCoordToXY(x, y)
+
         # skip items that are not unid rares
         if not isChaosRecipeItem(x, y):
-            continue
+            return False
 
         click(x, y, secondary='ctrl')
 
-        # recipe is complete
-        if isRecipeFinished():
-            acceptTrade()
-            closeWindow()
-            return True
+    # recipe is complete
+    if isRecipeFinished():
+        acceptTrade()
+        closeWindow()
+        return not checkExit()
 
     return False
 

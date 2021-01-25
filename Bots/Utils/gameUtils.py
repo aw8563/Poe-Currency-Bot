@@ -1,7 +1,7 @@
 import time
 
 from Bots.Utils.keyboardMouseUtils import *
-from Bots.Utils.config import  *
+from Bots.Utils.config import *
 
 def invite(name):
     type("\n/invite %s\n" % name)
@@ -20,6 +20,18 @@ def cancelTrade():
 def focusGame():
     click(GAME_X, GAME_Y)
     time.sleep(0.5)
+
+def stashCoordToXY(x, y):
+    x = STASH_CELL_X + x * CELL_SIZE
+    y = STASH_CELL_Y + y * CELL_SIZE
+
+    return x, y
+
+def inventoryCoordToXY(x, y):
+    x = INVENTORY_X + x * CELL_SIZE
+    y = INVENTORY_Y + y * CELL_SIZE
+
+    return x, y
 
 def vendorCells():
     for j in range(INVENTORY_COLS):

@@ -1,16 +1,10 @@
 class ItemFilter:
-    def __init__(self, tabX, tabY, fn, count):
-        self.tabX = tabX
-        self.tabY = tabY
-        self.fn = fn
-        self.count = count
+    def __init__(self, itemType, amount):
+        self.amount = amount
+        self.itemType = itemType
 
-    # TODO: check ilvl
-    def isValidForChaosRecipe(self, text):
-        return "Rarity: Rare" in text and "Unidentified" in text
-
-    def accept(self, text):
-        return self.isValidForChaosRecipe(text) and self.fn(text)
+    def accept(self, item):
+        return item.itemType == self.itemType
 
 # regex match from text
 def isRing(text):

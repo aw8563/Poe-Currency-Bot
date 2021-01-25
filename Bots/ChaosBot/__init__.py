@@ -1,5 +1,5 @@
 from Bots.Bot import Bot
-from Bots.ChaosBot.steps import moveToShopAndOpen, getFromStash, moveToStashAndOpen, sellToVendor
+from Bots.ChaosBot.steps import test, moveToShopAndOpen, getFromStash, moveToStashAndOpen, sellToVendor
 
 steps = [
     moveToStashAndOpen,

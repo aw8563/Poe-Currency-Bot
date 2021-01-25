@@ -35,7 +35,7 @@ INVENTORY_ROWS = 5
 INVENTORY_COLS = 12
 
 # folder location
-FOLDER_X = 270
+FOLDER_X = 280
 FOLDER_Y = 135
 
 # location of each tab
@@ -46,13 +46,41 @@ BOOT_TAB_X = 295
 HELMET_TAB_X = 345
 ARMOUR_AND_WEAPON_TAB_X = 400
 
+# get-stash-item/ api request tab index
+JEWELRY_TAB_IDX = 7
+GLOVE_TAB_IDX = 8
+BOOT_TAB_IDX = 9
+HELMET_TAB_IDX = 10
+ARMOUR_AND_WEAPON_TAB_IDX = 11
+
+CHAOS_STASHES = {
+    JEWELRY_TAB_IDX: JEWELRY_TAB_X,
+    GLOVE_TAB_IDX: GLOVE_TAB_X,
+    BOOT_TAB_IDX: BOOT_TAB_X,
+    HELMET_TAB_IDX: HELMET_TAB_X,
+    ARMOUR_AND_WEAPON_TAB_IDX: ARMOUR_AND_WEAPON_TAB_X
+}
+
+CHAOS_INVENTORY_CELLS = [
+    (0, 0),
+    (0, 2),
+    (0, 4),
+    (2, 0),
+    (2, 2),
+    (4, 0),
+    (4, 1),
+    (4, 2),
+    (5, 0),
+]
+
+
 # location of the vendor
 VENDOR_X = 220
 VENDOR_Y = 370
 
 # "sell item" button on vendor
 SHOP_BUTTON_X = 630
-SHOP_BUTTON_Y = 260
+SHOP_BUTTON_Y = 325
 
 # top left box in vendor
 SHOP_CELL_X = 95
