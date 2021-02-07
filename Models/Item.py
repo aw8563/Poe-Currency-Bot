@@ -9,7 +9,7 @@ class ItemType(Enum):
     HELMET = "Helmet"
     ARMOUR = "Body Armour"
     WEAPON = "Weapon"
-    UNKNOWN = "Unknown"
+    OTHER = "Other"
 
 def parseItemType(itemType, w, h, properties):
     try:
@@ -24,7 +24,7 @@ def parseItemType(itemType, w, h, properties):
             if "Belt" in itemType or "Sash" in itemType:
                 return ItemType.BELT
 
-            return ItemType.UNKNOWN
+            return ItemType.OTHER
 
         if h == 2 and w == 2: # glove, boot, helmet. We are ignoring non large weapons
             if "Gauntlets" in itemType or "Gloves" in itemType or "Mitts" in itemType:
@@ -38,7 +38,7 @@ def parseItemType(itemType, w, h, properties):
 
         # weapons and armour
         if h < 3 or w != 2:
-            return ItemType.UNKNOWN
+            return ItemType.OTHER
 
         # check properties
         property = properties[0]['name']
@@ -51,7 +51,7 @@ def parseItemType(itemType, w, h, properties):
         return ItemType.WEAPON
 
     except:
-        return ItemType.UNKNOWN
+        return ItemType.OTHER
 
 class Item:
     def __init__(self, json):
@@ -62,14 +62,17 @@ class Item:
         self.y = json['y']
         self.w = json['w']
         self.h = json['h']
+        self.stackSize = json['stackSize'] if 'stackSize' in json else 0
+        self.maxStackSize = json['maxStackSize'] if 'maxStackSize' in json else 0
+
         self.typeName = json['typeLine']
         self.type = parseItemType(self.typeName, self.w, self.h, json['properties'] if 'properties' in json else [])
         self.stash = int(json['inventoryId'][5:]) - 1 # -1 if inventory
 
     # json doesn't contain rarity???
     def validForChaosRecipe(self):
-        return self.ilvl >= 60 and not self.identified and self.type != ItemType.UNKNOWN
+        return self.ilvl >= 60 and not self.identified and self.type != ItemType.OTHER
 
     def __str__(self):
-        return "%s: %s (ilvl %d) [%d, %d] in stash %d" % \
-               (self.type, self.typeName, self.ilvl, self.x, self.y, self.stash)
+        return "%s: %s (%d/%d), (ilvl %d) [%d, %d] in stash %d" % \
+               (self.type, self.typeName, self.stackSize, self.maxStackSize, self.ilvl, self.x, self.y, self.stash)

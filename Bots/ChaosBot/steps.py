@@ -1,4 +1,6 @@
-from Utils import *
+from Utils.apiUtils import *
+from Utils.gameUtils import *
+
 from Bots.ChaosBot.ItemFilter import *
 from Models.Item import ItemType
 
